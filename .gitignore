@@ -1,0 +1,8 @@
+src/**/ObservableRobot.java
+libs/robocode.jar
+
+bin/
+.idea/
+.project/
+.classpath
+*.iml
