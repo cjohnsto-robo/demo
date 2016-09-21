@@ -13,7 +13,7 @@ public class GitHubRobot extends ObservableRobot {
     private Color currentGunColour = null;
 
     public String getName() {
-        return null;
+        return "Test Bot";
     }
 
     public void run() {
