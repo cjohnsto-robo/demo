@@ -24,7 +24,8 @@ public class GitHubRobot extends ObservableRobot {
 
     @Override
     public void onHitWall(HitWallEvent event) {
-
+    	turnRight(24.0);
+    	ahead(56.9);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class GitHubRobot extends ObservableRobot {
 
     @Override
     public void onStatus(StatusEvent event) {
-
+    		setGunColor(Color.WHITE);
     }
 
 }
