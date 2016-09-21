@@ -50,14 +50,47 @@ public class GitHubRobotTest {
 		stopRobot(robot, robotThread);
 	}
 
-	@Test
-	public void testNamedBot() throws Exception {
-		ObservableRobot robot = instantiateRobot();
-		IStandardRobotPeer peer = spy(IStandardRobotPeer.class);
-		robot.setPeer(peer);
+    @Test // Test 1
+    public void testNamedBot() throws Exception {
+        ObservableRobot robot = instantiateRobot();
+        IStandardRobotPeer peer = spy(IStandardRobotPeer.class);
+        robot.setPeer(peer);
 
-		assertNotNull(robot.getName());
-	}
+        assertNotNull(robot.getName());
+    }
+
+    @Test // Test 2
+    public void testWallBangerBot() throws Exception {
+        ObservableRobot robot = instantiateRobot();
+        IStandardRobotPeer peer = spy(IStandardRobotPeer.class);
+        robot.setPeer(peer);
+
+        Thread robotThread = startRobot(robot);
+
+        robot.onHitWall(new HitWallEvent(1.0));
+
+        stopRobot(robot, robotThread);
+
+        verify(peer, atLeastOnce()).move(anyDouble());
+        verify(peer, atLeastOnce()).turnBody(anyDouble());
+    }
+
+    @Test // Test 3
+    public void testGunColouringBotWhiteGunWhenReady() throws Exception {
+        ObservableRobot robot = instantiateRobot();
+        IStandardRobotPeer peer = spy(IStandardRobotPeer.class);
+        robot.setPeer(peer);
+
+        IHiddenStatusHelper statusHelper = getStatusHelper();
+
+        robot.onStatus(
+            new StatusEvent(
+                statusHelper.createStatus(0.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.0, 0, 0, 0, 0, 0)
+            )
+        );
+
+        verify(peer, times(1)).setGunColor(Color.WHITE);
+    }
 
 	private IHiddenStatusHelper getStatusHelper() {
 		IHiddenStatusHelper statusHelper=null;
@@ -102,7 +135,7 @@ public class GitHubRobotTest {
 
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.setClassLoaders(new ClassLoader[] {classLoader});
-	        configurationBuilder.setUrls(urls);
+            configurationBuilder.setUrls(urls);
 
             Reflections reflections = new Reflections(configurationBuilder);
 
@@ -113,6 +146,6 @@ public class GitHubRobotTest {
             robotClass = subTypesOf.iterator().next();
         }
 
-	    return robotClass.newInstance();
+        return robotClass.newInstance();
 	}
 }
